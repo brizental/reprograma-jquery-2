@@ -1,9 +1,10 @@
 MINES = 40;//Quantidade de minas
 HEIGHT = 20;//Altura da tabela
 WIDTH = 15;//Tamanho da tabela
+TIMER = false;
 
 // Imputa randomicamente as 40 minas na tabela
-function getUniqueRandomIndexesIn2DArray(table, indexes) {
+function getUniqueRandomIndexesInField(table, indexes) {
     // Verifica se a váriavel indexes é indefinida e atribui o array esta vazia
     indexes = indexes ? indexes : [];
     // Variável i começa no 0(array vazio), enquando o i for menor que 40 minas, incrementa 1 no valor de i
@@ -55,6 +56,71 @@ for (var i = 0; i < HEIGHT; i++) {
     for (var j = 0; j < WIDTH; j++) {
         var mine = $("<td>");//Cria uma célula vazia para linha
         mine.data("mines", 0);//Insere um dado e um valor para a célula vazia
+        
+        var button = $("<div>");
+        button.addClass("button");
+        button.data("coordinates", [j, i]);
+
+        button.contextmenu(function () {
+            return false;
+        });
+
+        button.mousedown(function(event) {
+            if (!TIMER) {
+                TIMER = setInterval(function () {
+                    counter++;
+                    $("#timer").text(counter);
+                }, 1000);
+            }
+            if (event.which === 3) {
+                $(this).toggleClass("red-flag");
+                $("#mines").text($(".red-flag").length);
+            } else {
+                $("#reset").addClass("wow");
+            }
+        });
+
+        button.mouseup(function () {
+            $("#reset").removeClass("wow");
+            if (!$(this).hasClass("red-flag")) {
+                if ($(this).parent().hasClass("mine")) {
+                    $("td .button").each(function (index, button) {
+                        button.remove();
+                    })
+                    $("#reset").addClass("game-over");
+                    clearInterval(TIMER);
+                } else if ($(this).parent().data("mines") > 0) {
+                    $(this).remove();
+                } else if ($(this).parent().data("mines") === 0) {
+                    var coordinates = $(this).data("coordinates");
+                    $(this).remove();
+                    (function (x, y) {
+                        var adjacent_cells = getAdjacentCellIndexes(x, y);
+                        for (var k = 0; k < adjacent_cells.length; k++) {
+                            var x = adjacent_cells[k][0];
+                            var y = adjacent_cells[k][1];
+                            var cell = $(field_matrix[y][x]);
+                            var button = cell.children($(".button"));
+                            if (button.length > 0) {
+                                button.remove();
+                                if (cell.data("mines") === 0) {
+                                    arguments.callee(x, y);
+                                }
+                            }
+                        }
+                    })(coordinates[0], coordinates[1]);
+                }
+
+                if ($("td .button").length === MINES) {
+                    $("#reset").addClass("winner");
+                    clearInterval(TIMER);
+                }
+
+            }
+        })
+
+        mine.append(button);
+
         row.append(mine);//A linha criada recebe a célula preenchida
         row_vector.push(mine)
         console.log(row_vector);
@@ -84,7 +150,6 @@ $.each(mine_indexes, function (index, coordinates) {
         if (!cell.hasClass("mine")) {
             var num_mines = cell.data("mines") + 1;
             cell.data("mines", num_mines);
-            cell.text(num_mines);
             switch (num_mines) {
                 case 1:
                     cell.css("color", "blue");
@@ -113,4 +178,13 @@ $.each(mine_indexes, function (index, coordinates) {
             }
         }
     })
+});
+
+$.each(field_matrix, function(index, row) {
+    $.each(row, function(index, cell) {
+        var number = $(cell).data("mines");
+        if (number > 0) {
+            $(cell).append(number);
+        }
+    });
 });
