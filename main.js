@@ -1,4 +1,4 @@
-MINES = 40;//Quaantidade de minas
+MINES = 40;//Quantidade de minas
 HEIGHT = 20;//Altura da tabela
 WIDTH = 15;//Tamanho da tabela
 
@@ -22,7 +22,7 @@ function getUniqueRandomIndexesIn2DArray(table, indexes) {
             }
         }
         //insere na lista os valores de y e x
-        indexes.push([random_row, random_cell]);//Primeiro Bag era o inserção dos valores em y e x antes(indexes.push([random_cell, random_row]))
+        indexes.push([random_cell, random_row]);//Primeiro Bag era o inserção dos valores em y e x antes(indexes.push([random_cell, random_row]))
     }
     return indexes;
 }
@@ -59,27 +59,32 @@ for (var i = 0; i < HEIGHT; i++) {
         row_vector.push(mine)
         console.log(row_vector);
     }
+    //table rebece tr
     field.append(row);
+    //array com celulas dentro da matrix com todas as linhas
     field_matrix.push(row_vector);
 }
 
-var mine_indexes = getUniqueRandomIndexesIn2DArray(field_matrix);
+//recebe array de array com indexeszx randomicos
+var mine_indexes = getUniqueRandomIndexesInField();
+//lupar indexes $.each (loop especifico para arrays, recebe) Esse método do jQuery funciona como "for of" do javascript
 $.each(mine_indexes, function(index, coordinates) {
     var x = coordinates[0];
     var y = coordinates[1];
-    var mine = $(field_matrix[x][y]);
+    var mine = $(field_matrix[y][x]);
     mine.addClass("mine");
 });
 
 $.each(mine_indexes, function (index, coordinates) {
-    var adjacent_cells = getAdjacentCellIndexes(coordinates[1], coordinates[0]);
+    var adjacent_cells = getAdjacentCellIndexes(coordinates[0], coordinates[1]);
     $.each(adjacent_cells, function(index, coordinates) {
         var x = coordinates[0];
         var y = coordinates[1];
-        var cell = $(field_matrix[x][y]);
+        var cell = $(field_matrix[y][x]);
         if (!cell.hasClass("mine")) {
             var num_mines = cell.data("mines") + 1;
             cell.data("mines", num_mines);
+            cell.text(num_mines);
             switch (num_mines) {
                 case 1:
                     cell.css("color", "blue");
@@ -108,13 +113,4 @@ $.each(mine_indexes, function (index, coordinates) {
             }
         }
     })
-});
-
-$.each(field_matrix, function(index, row) {
-    $.each(row, function(index, cell) {
-        var number = $(cell).data("mines");
-        if (number > 0) {
-            $(cell).append(number);
-        }
-    });
 });
