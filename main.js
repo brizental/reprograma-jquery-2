@@ -5,6 +5,7 @@ MINES = 40;
 HEIGHT = 20;
 //numero de linhas do tabuleiro
 WIDTH = 15;
+TIMER = false;
 
 //gerar indexes randomicos na array com arrays dentro (row e cells) para posicionar as BOMBAS
 function getUniqueRandomIndexesInField(indexes) {
@@ -61,6 +62,7 @@ function getAdjacentCellIndexes(x, y) {
 var field_matrix = [];
 //field chama a <table> dentro da div com id field. Esse seletor do jQuery funciona como querySelectorAll do javascript
 var field = $("#field table");
+var counter = 0;
 //loop que rodará qtd de linhas até o máximo de 20
 for (var i = 0; i < HEIGHT; i++) {
     //variavel que cria uma lista vazia, uma array normal que salvará a lista de números
@@ -138,8 +140,7 @@ for (var i = 0; i < HEIGHT; i++) {
         mine.append(button);
 
         row.append(mine);//A linha criada recebe a célula preenchida
-        row_vector.push(mine)
-        console.log(row_vector)
+        row_vector.push(mine);
 
     }
     //table rebece tr
