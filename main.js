@@ -1,63 +1,84 @@
-MINES = 40;//Quantidade de minas
-HEIGHT = 20;//Altura da tabela
-WIDTH = 15;//Tamanho da tabela
+//variaveis globais a serem usadas no código todo e constante, não precisa de var e será sempre em letra maiúscula
+//quatidade de minas
+MINES = 40;
+//altura do tabuleiro
+HEIGHT = 20;
+//numero de linhas do tabuleiro
+WIDTH = 15;
 
-// Imputa randomicamente as 40 minas na tabela
-function getUniqueRandomIndexesIn2DArray(table, indexes) {
-    // Verifica se a váriavel indexes é indefinida e atribui o array esta vazia
+//gerar indexes randomicos na array com arrays dentro (row e cells) para posicionar as BOMBAS
+function getUniqueRandomIndexesInField(indexes) {
+    //condicao ? valor1 : valor2
+    //Se condicao for verdadeira, o operador terá o valor de valor1. Caso contrário, terá o valor de valor2.
+    //if (indexes) { (se verdadeiro)
+    //    indexes = indexes
+    //} else { (se falso)
+    //    indexes = []
+    //}
     indexes = indexes ? indexes : [];
-    // Variável i começa no 0(array vazio), enquando o i for menor que 40 minas, incrementa 1 no valor de i
+    //loop que inicia no tamanho de indexes existentes
     for (var i = indexes.length; i < MINES; i++) {
-        //Váriavel recebe um numero ramdomico de 0 até 15 , equivalente ao eixo x
+        //random_cell gera número randômico de 0 a 15 (coordX)
         var random_cell = Math.floor(Math.random() * WIDTH);
-        //Váriavel recebe um numero ramdomico de 0 até 20, equivalente ao eixo y
+        //random_row gera número ranômico de 0 a 20 (coordY)
         var random_row = Math.floor(Math.random() * HEIGHT);
-        // Variável j começa no 0, enquando o j for menor que tamanho do array no momento, incrementa 1 no valor de j
         for (var j = 0; j < indexes.length; j++) {
-            //Condição verifica se as coordenadas atuais já foram preenchidas com valor e tipo iguais
+            //condicao verifica se as coordenadas atuais já foram preenchidas conferindo valor e tipo para não tentar popular repetidamente (0 e 1 são os valores da array [0,1])
             if (indexes[j][0] === random_cell &&
                 indexes[j][1] === random_row) {
-                // Sendo iguais volta para função, no momento que ela está(arguments.callee, mas poderia ser o nome da função também)
-                return arguments.callee(table, indexes);
+                //arguments.callee é uma propriedade que contém a função atualmente em execução, na situação em que está.
+                return arguments.callee(indexes);
             }
         }
-        //insere na lista os valores de y e x
-        indexes.push([random_cell, random_row]);//Primeiro Bag era o inserção dos valores em y e x antes(indexes.push([random_cell, random_row]))
+        //sobe na array os valores de random_row e random_cell gerados
+        indexes.push([random_cell, random_row]);
+        console.log(indexes);
     }
     return indexes;
 }
 
-// Mapeia as celulas que possui as minas adjacentes
+//percorre as céluas adjacentes às BOMBAS e dá coordenadas X,Y
 function getAdjacentCellIndexes(x, y) {
-    //Mapeia as células adjacentes a cordenada estudada
+    //A função $.grep recebe um array e uma função de filtro. Esta função retorna um novo array (não altera o original) contendo apenas os elementos para os quais a função filtro retorna true.
+    //Essa função do jQuery funciona como filter do javascript
     return $.grep([
-        [ x - 1, y - 1 ],
-        [ x, y - 1 ],
-        [ x + 1, y - 1 ],
-        [ x - 1, y ],
-        [ x + 1, y ],
-        [ x - 1, y + 1 ],
-        [ x, y + 1 ],
-        [ x + 1, y + 1 ]
-    ], function (element) {
-        return element[0] >= 0 && element[1] >= 0
-            && element[0] < WIDTH && element[1] < HEIGHT//Segundo bag, o segundo elemento refere-se ao eixo y (element[0] para element[1])
+        [x - 1, y - 1],
+        [x, y - 1],
+        [x + 1, y - 1],
+        [x - 1, y],
+        [x + 1, y],
+        [x - 1, y + 1],
+        [x, y + 1],
+        [x + 1, y + 1]
+    ], function (coordinate) {
+        //a coordenada X deve ser >= 0 e menor que a WIDTH e a coordenada Y deve ser >=0 e menor que a HEIGHT
+        return coordinate[0] >= 0 && coordinate[1] >= 0
+            && coordinate[0] < WIDTH && coordinate[1] < HEIGHT
     });
 }
 
-var field_matrix = [];//Criado array vazia
-var field = $("#field table");// Chama o id field e tag table do html
-// Variável i começa no 0, enquando o i for menor que 20 que é a altura e incrementa 1 no valor de i até chegar a condição não valer mais
+//field_matrix cria uma array vazia
+var field_matrix = [];
+//field chama a <table> dentro da div com id field. Esse seletor do jQuery funciona como querySelectorAll do javascript
+var field = $("#field table");
+//loop que rodará qtd de linhas até o máximo de 20
 for (var i = 0; i < HEIGHT; i++) {
-    var row_vector = [];// Cria um array vazia para linha
-    var row = $("<tr>");// Cria uma linha nova no html
-    //Variável j começa no 0, enquando o j for menor que 15 que é a tamanho da tabela e incrementa 1 no valor de j até chegar a condição não valer mais
+    //variavel que cria uma lista vazia, uma array normal que salvará a lista de números
+    var row_vector = [];
+    //variavel que cria a linha da tabela, um nodulo do DOM. Esse seletor do jQuery funciona como createElement do javascript
+    var row = $("<tr>");
+    //loop que rodará a qtd de células até o maximo de 15
     for (var j = 0; j < WIDTH; j++) {
-        var mine = $("<td>");//Cria uma célula vazia para linha
-        mine.data("mines", 0);//Insere um dado e um valor para a célula vazia
-        row.append(mine);//A linha criada recebe a célula preenchida
-        row_vector.push(mine)
-        console.log(row_vector);
+        //variavel que cria a celula da tabela, um nodulo do DOM. Esse seletor do jQuery funciona como createElement do javascript
+        var cell = $("<td>");
+        //.data é utilizado para colocar um valor dentro do objeto da célula
+        cell.data("mines", 0);
+
+        //tr recebe td (poe dentro do HTML)
+        row.append(cell);
+        //objeto de javascripr dentro do vetor (para mexer no JS)
+        row_vector.push(cell)
+
     }
     //table rebece tr
     field.append(row);
@@ -68,7 +89,7 @@ for (var i = 0; i < HEIGHT; i++) {
 //recebe array de array com indexeszx randomicos
 var mine_indexes = getUniqueRandomIndexesInField();
 //lupar indexes $.each (loop especifico para arrays, recebe) Esse método do jQuery funciona como "for of" do javascript
-$.each(mine_indexes, function(index, coordinates) {
+$.each(mine_indexes, function (index, coordinates) {
     var x = coordinates[0];
     var y = coordinates[1];
     var mine = $(field_matrix[y][x]);
@@ -77,7 +98,7 @@ $.each(mine_indexes, function(index, coordinates) {
 
 $.each(mine_indexes, function (index, coordinates) {
     var adjacent_cells = getAdjacentCellIndexes(coordinates[0], coordinates[1]);
-    $.each(adjacent_cells, function(index, coordinates) {
+    $.each(adjacent_cells, function (index, coordinates) {
         var x = coordinates[0];
         var y = coordinates[1];
         var cell = $(field_matrix[y][x]);
