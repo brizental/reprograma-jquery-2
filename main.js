@@ -1,5 +1,3 @@
-
-
 //variaveis globais a serem usadas no código todo e constante, não precisa de var e será sempre em letra maiúscula
 //quatidade de minas
 MINES = 40;
@@ -62,7 +60,7 @@ function getAdjacentCellIndexes(x, y) {
     });
 }
 
-function createTable(resetButton){
+function createTable(){
     //field_matrix cria uma array vazia
     var field_matrix = [];
     //field chama a <table> dentro da div com id field. Esse seletor do jQuery funciona como querySelectorAll do javascript
@@ -215,11 +213,13 @@ function createTable(resetButton){
 
 }
 
-
 $("#reset").click(function(){
-
+    
     $("td").remove()
     createTable()
-    $("#reset").removeClass("game-over wow winner")
-      
+    $("#reset").removeClass("game-over wow winner");
+    TIMER = false;
+    $("#timer").text("");
+ 
 });
+
