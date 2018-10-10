@@ -19,6 +19,14 @@ body {
     position: relative;
 }
 
+li {
+    list-style: none;
+}
+
+ul {
+    display: none;
+}
+
 .button {
     background-color: $windows-light-gray;
     border: 4px outset darkgray;
@@ -70,7 +78,7 @@ body {
     .window-controls {
         padding: 10px 5px;
 
-        &.a {
+        & a {
             text-decoration: none;
             display: inline-block;
             margin-right: 10px;
@@ -81,8 +89,8 @@ body {
             }
         }
 
-        &.ul {
-            display: none;
+        .__ul {
+            position: relative;
         }
     }
 }

@@ -229,18 +229,32 @@ var menu = $("#controlGame");
 //criamos pelo jQuery uma <ul> com a classe 'lista' para a lista com os níveis de dificuldade do jogo
 var lista = $("<ul>").addClass("window-controls__ul");
 //criamos pelo jQuery as <li> da lista
-var opcao1 = $("<li>").text("Iniciante");
-var opcao2 = $("<li>").text("Intermediário");
-var opcao3 = $("<li>").text("Avançado");
+var opcao1 = $("<li>");
+var opcao2 = $("<li>");
+var opcao3 = $("<li>");
+//criamos os botões <a> que irão dentro das <li>
+var iniciante = $("<a>").text("Iniciante");
+var intermediario = $("<a>").text("Intermediário");
+var avancado = $("<a>").text("Avançado");
+
+//inserimos os botões <a> dentro das <li>
+opcao1.append(iniciante);
+opcao2.append(intermediario);
+opcao3.append(avancado);
+
 //inserimos as <li> dentro da <ul>
 lista.append(opcao1);
 lista.append(opcao2);
 lista.append(opcao3);
+
 //inserimos a <ul> dentro da <a> através de seu id controlGame
 menu.append(lista);
 
-// $("ul.window-controls__ul").mouseover(function () {
-//     console.log("passou");
-//     $("ul.window-controls__ul").hide();
-// })
-
+$("div.window-controls").mouseover(function () {
+    console.log("esse aí passou");
+    $("ul.window-controls__ul").show();
+})
+$("div.window-controls").mouseout(function () {
+    console.log("esse aí passou");
+    $("ul.window-controls__ul").hide();
+})
