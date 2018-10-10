@@ -23,10 +23,6 @@ li {
     list-style: none;
 }
 
-ul {
-    display: none;
-}
-
 .button {
     background-color: $windows-light-gray;
     border: 4px outset darkgray;
@@ -89,8 +85,17 @@ ul {
             }
         }
 
-        .__ul {
+        .window-controls__ul1{
+            display: flex;
+            list-style-position: outside;
             position: relative;
+        }
+
+        .window-controls__ul2{
+            display: none;
+            z-index: 1;
+            position: absolute;
+            background-color:#d6cfc7;
         }
     }
 }
