@@ -218,6 +218,7 @@ $("#reset").click(function(){
     $("td").remove()
     createTable()
     $("#reset").removeClass("game-over wow winner");
+    clearInterval(TIMER);
     TIMER = false;
     $("#timer").text("");
  
