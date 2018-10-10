@@ -70,7 +70,7 @@ body {
     .window-controls {
         padding: 10px 5px;
 
-        a {
+        &.a {
             text-decoration: none;
             display: inline-block;
             margin-right: 10px;
@@ -79,6 +79,10 @@ body {
                 background-color: $windows-blue;
                 color: white;
             }
+        }
+
+        &.ul {
+            display: none;
         }
     }
 }
