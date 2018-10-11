@@ -258,3 +258,5 @@ $("ul.window-controls__ul1").mouseout(function () {
     console.log("esse aí passou");
     $("ul.window-controls__ul2").hide();
 })
+
+
